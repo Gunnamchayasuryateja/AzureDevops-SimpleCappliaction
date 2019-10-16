@@ -1,0 +1,193 @@
+#include <stdio.h>
+#include <string.h>
+
+
+struct class
+{
+    struct secA
+    {
+        char sName[50][20];
+        int Sno[50];
+    }ObjA;
+
+    struct secB
+    {
+        char sName[50][20];
+        int Sno[50];
+    }ObjB;
+    
+}objClass;
+
+
+int addStudentToClass(char *newStudent, char sec)
+{
+    if(!sec)
+    {
+        return -1;
+    }
+    
+    if(sec == 'A' || sec == 'a')
+    {
+        static int astudent = 0;
+        strcpy(objClass.ObjA.sName[astudent],newStudent);
+        objClass.ObjA.Sno[astudent] = astudent+1;
+        astudent++;
+    }
+    else if(sec == 'B' || sec == 'b')
+    {
+        static int bstudent = 0;
+        strcpy(objClass.ObjB.sName[bstudent],newStudent);
+        objClass.ObjB.Sno[bstudent] = bstudent + 1;
+        bstudent++;
+    }
+    else
+    {
+        printf("Given section is not avalible in the class");
+        return -1;
+    }
+    
+    return 1;
+
+}
+
+void swapData(int *ptr, int size,int start)
+{
+    for(int tmp = start; tmp < size ; tmp++)
+    {
+        ptr[tmp] = ptr[tmp+1];
+    }
+    
+}
+
+int removeStudentFromClass(int Sno, char sec)
+{
+     if(sec == 'B' || sec == 'b')
+    {
+        strcpy(objClass.ObjA.sName[Sno-1],objClass.ObjA.sName[Sno]);
+        swapData(objClass.ObjB.Sno,sizeof(objClass.ObjB.Sno)/sizeof(int), Sno-1);
+    }
+    else if(sec == 'A' || sec == 'a')
+    {
+        strcpy(objClass.ObjA.sName[Sno-1],objClass.ObjA.sName[Sno]);
+        swapData(objClass.ObjB.Sno,sizeof(objClass.ObjA.Sno)/sizeof(int), Sno-1);
+    }
+    else
+    {
+        printf("Given section is not avalible in the class");
+        return -1;
+    }
+    return 1;
+}
+
+int upDateStudentDet(char* newSname, int Sno, char sec)
+{
+     if(sec == 'B' || sec == 'b')
+    {
+    
+        strcpy(objClass.ObjA.sName[Sno-1],newSname);
+
+    }
+    else if(sec == 'A' || sec == 'a')
+    {
+        strcpy(objClass.ObjA.sName[Sno-1],newSname);
+    }
+    else
+    {
+        printf("Given section is not avalible in the class");
+        return -1;
+        
+    }
+    
+    return 1;
+}
+
+char* getStudentName(int Sno, char sec)
+{
+	
+    if(sec == 'B' || sec == 'b')
+    {
+       return objClass.ObjB.sName[Sno - 1];
+        
+    }
+    else if(sec == 'A' || sec == 'a')
+    {
+        return objClass.ObjA.sName[Sno - 1];
+    }
+    else
+    {
+        printf("Given section is not avalible in the class");
+        return NULL;
+        
+    }
+
+}
+
+void toConvtUpperToLower(char *ptr, int size)
+{
+    int c = 0;
+   while (c < size) 
+   {
+      if(ptr[c] >= 'A' && ptr[c] <= 'Z') 
+      {
+           ptr[c] = ptr[c] + 32;
+         
+      }
+      c++;
+   }
+    
+}
+
+int getStudentNo(char* Sname , char sec)
+{
+    if(sec == 'B' || sec == 'b')
+    {  
+        char arr[10], arr1[10];
+        strcpy(arr,Sname);
+        toConvtUpperToLower(arr, strlen(arr)+1);
+        toConvtUpperToLower(objClass.ObjB.sName,strlen(objClass.ObjB.sName)+1);
+        for(int tmp = 0; tmp < sizeof(objClass.ObjB.sName)/sizeof(int)*20 ; tmp++)
+        {
+            if(0 == strcmp(arr,objClass.ObjB.sName[tmp]))
+            {
+                return tmp+1;
+            }
+        }
+    }
+    else if(sec == 'A' || sec == 'a')
+    {
+        char arr[10], arr1[10];
+        strcpy(arr,Sname);
+        toConvtUpperToLower(arr, strlen(arr)+1);
+        toConvtUpperToLower(objClass.ObjA.sName,strlen(objClass.ObjA.sName)+1);
+        for(int tmp = 0; tmp < sizeof(objClass.ObjA.sName)/sizeof(int)*strlen(objClass.ObjA.sName[tmp]) ; tmp++)
+        {
+            if(0 == strcmp(&arr,objClass.ObjA.sName[tmp]))
+            {
+                return tmp+1;
+            }
+        }
+    }
+    else
+    {
+        printf("Given section is not avalible in the class");
+        return -1;
+    }
+    
+    return -1;
+}
+
+
+int main()
+{
+    addStudentToClass("prasad",'A');
+    addStudentToClass("lika",'A');
+    addStudentToClass("srinadh",'b');
+    upDateStudentDet("suresh",1,'a');
+    printf("student name %s\n",getStudentName(1,'a'));
+    removeStudentFromClass(1,'a');
+    
+    printf("student name %s",getStudentName(1,'a'));
+    printf("student no %d",getStudentNo("lika",'A'));
+  
+    return 0;
+}
